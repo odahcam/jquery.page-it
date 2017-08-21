@@ -75,7 +75,7 @@
                 this.pageLoadData = {};
                 this.pageLoadData.pageIndex = pageIndex;
 
-                this.trigger('page.beforeLoad', this.pageLoadData);
+                this.trigger('page.load.before', this.pageLoadData);
 
                 var that = this;
 
@@ -109,7 +109,7 @@
 
                         } else {
 
-                            that.trigger('page.empty', data);
+                            that.trigger('page.content.empty', data);
 
                         }
 
@@ -121,7 +121,7 @@
                     complete: function (response) {
 
                         // plugin .trigger method
-                        that.trigger('page.afterLoad', response);
+                        that.trigger('page.load.after', response);
 
                         console.groupEnd();
 
@@ -138,12 +138,12 @@
                         this.trigger('page.filled', this.pages[pageIndex]);
                     }
 
-                    this.trigger('page.loaded', this.pages[pageIndex]);
-                    this.trigger('page.loadedFromCache', this.pages[pageIndex]);
+                    this.trigger('page.content.loaded', this.pages[pageIndex]);
+                    this.trigger('page.loaded.cache', this.pages[pageIndex]);
 
                 } else {
 
-                    this.trigger('page.empty', this.pages[pageIndex]);
+                    this.trigger('page.content.empty', this.pages[pageIndex]);
 
                 }
 
