@@ -1,5 +1,5 @@
 {
-  "name": "jquery.pageIt",
+  "name": "jquery.page-it",
   "version": "0.1.0",
   "description": "Lib for build paginations.",
   "main": "jquery.page-it.js",
