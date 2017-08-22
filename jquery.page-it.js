@@ -1,4 +1,4 @@
-(function ($, window, document, undefined) {
+(function($, window, document, undefined) {
 
     var pluginName = 'pageIt';
 
@@ -38,10 +38,9 @@
         this.pageMeta.current = this.settings.initPage;
         this.pageMeta.next = this.settings.initPage + 1;
 
-        this.pageLoadData = {};
+        this.requestData = {};
 
         return this.init();
-
     };
 
     // Pagination Methods
@@ -50,19 +49,18 @@
         /**
          * Initialize module functionality.
          **/
-        init: function () {
+        init: function() {
 
             if (!!this.settings.initPage)
                 this.to(this.settings.initPage);
 
             this.trigger(pluginName + '.ready');
-
         },
 
         /**
          * @param {intger} pageIndex
          **/
-        to: function (pageIndex) {
+        to: function(pageIndex) {
 
             if (!pageIndex || pageIndex > this.pageMeta.last)
                 return this;
@@ -75,14 +73,14 @@
             if (!this.settings.cachePagination || !this.pages[pageIndex]) {
 
                 /*
-                 * reset pageLoadData object before triggering the beforeLoad,
+                 * reset requestData object before triggering the beforeLoad,
                  * so the programer can replace it.
                  * Auto set the pageIndex that will be requested.
                  */
-                this.pageLoadData = {};
-                this.pageLoadData.pageIndex = pageIndex;
+                this.requestData = {};
+                this.requestData.pageIndex = pageIndex;
 
-                this.trigger('page.load.before', this.pageLoadData);
+                this.trigger('page.load.before', this.requestData);
 
                 var that = this;
 
@@ -90,9 +88,9 @@
                     cache: this.settings.cache,
                     url: this.settings.url,
                     method: this.settings.method,
-                    data: this.pageLoadData,
+                    data: this.requestData,
                     dataType: this.settings.dataType,
-                    success: function (data) {
+                    success: function(data) {
 
                         that.pages[pageIndex] = data;
 
@@ -123,11 +121,11 @@
                         }
 
                     },
-                    error: function (response) {
+                    error: function(response) {
                         console.error('Erro ao carregar página.');
                         console.log(response);
                     },
-                    complete: function (response) {
+                    complete: function(response) {
 
                         // plugin .trigger method
                         that.trigger('page.load.after', response);
@@ -159,13 +157,12 @@
             }
 
             return this;
-
         },
 
         /**
          * Calls .to() with page number pageMeta.first as parameter.
          **/
-        first: function () {
+        first: function() {
             this.trigger('page.first', this.pageMeta.first);
             return this.to(this.pageMeta.first);
         },
@@ -173,7 +170,7 @@
         /**
          * Calls .to() with page number pageMeta.current - 1 as parameter.
          **/
-        prev: function () {
+        prev: function() {
             this.trigger('page.prev', this.pageMeta.next);
             return this.to(this.pageMeta.prev);
         },
@@ -181,7 +178,7 @@
         /**
          * Calls .to() with page number pageMeta.current + 1 as parameter.
          **/
-        next: function () {
+        next: function() {
             this.trigger('page.next', this.pageMeta.next);
             return this.to(this.pageMeta.next);
         },
@@ -189,7 +186,7 @@
         /**
          * Calls .to() with page number pageMeta.last as parameter.
          **/
-        last: function () {
+        last: function() {
             this.trigger('page.last', this.pageMeta.last);
             return this.to(this.pageMeta.last);
         },
@@ -200,7 +197,7 @@
          * @param {function} fn
          * @return {object}
          **/
-        on: function (eventName, fn) {
+        on: function(eventName, fn) {
 
             if (this.events[eventName]) {
                 this.events[eventName].push(fn);
@@ -208,9 +205,7 @@
                 this.events[eventName] = [fn];
             }
 
-
             return this;
-
         },
 
         /**
@@ -219,14 +214,14 @@
          * @param {undefined} arguments
          * @example this.trigger('event'[, data, response, etc]);
          **/
-        trigger: function (eventName) {
+        trigger: function(eventName) {
 
             if (this.events[eventName] && this.events[eventName].length) {
 
                 var that = this,
                     args = arguments;
 
-                this.events[eventName].map(function (fnName) {
+                this.events[eventName].map(function(fnName) {
 
                     fnName.apply(that, Array.prototype.slice.call(args, 1)); // Array.prototype.slice will convert the arguments object
 
@@ -235,13 +230,12 @@
             }
 
             return this;
-
         },
 
         /**
          * Method to get some updated details about pagination.
          **/
-        updateMeta: function () {
+        updateMeta: function() {
 
             var that = this;
 
@@ -251,7 +245,7 @@
                 method: this.settings.method,
                 data: this.pageMeta,
                 dataType: 'json',
-                success: function (data) {
+                success: function(data) {
 
                     that.trigger('page.meta.loaded', data);
 
@@ -269,22 +263,21 @@
                     }
 
                 },
-                error: function (response) {
+                error: function(response) {
                     console.error('Erro ao carregar meta dados.');
                     console.log(response);
                 },
-                complete: function (response) {
+                complete: function(response) {
                     console.groupEnd();
                 }
             });
 
             return this;
-
         },
 
-        setData: function (object) {
+        setData: function(object) {
 
-            $.extend(this.pageLoadData, object);
+            $.extend(this.requestData, object);
 
         }
 
