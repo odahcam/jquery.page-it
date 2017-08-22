@@ -1,5 +1,12 @@
 (function ($, window, document, undefined) {
 
+    var pluginName = 'pageIt';
+
+    if(!$) {
+        console.error(pluginName + ': Não foi possível reconhecer o jQuery, inicialização cancelada!');
+        return false;
+    }
+
     var defaults = {
         url: '',
         method: 'get',
@@ -7,7 +14,7 @@
         initPage: 1,
         cacheAjax: false,
         cachePagination: true,
-        containerContent: null,
+        contentView: null,
         urlMeta: '',
         pageMeta: {
             first: 1,
@@ -20,7 +27,7 @@
     };
 
     // Constructor
-    window.Pagination = function Pagination(options) {
+    window[pluginName] = function Pagination(options) {
 
         this.settings = $.extend(true, {}, defaults, options);
         this.events = {};
@@ -48,7 +55,7 @@
             if (!!this.settings.initPage)
                 this.to(this.settings.initPage);
 
-            this.trigger('ready.pagination');
+            this.trigger(pluginName + '.ready');
 
         },
 
@@ -98,13 +105,15 @@
                         if (!!data) {
 
                             // se tem um container de conteúdo definido e a resposta é em HTML, insere o conteúdo nele
-                            if (that.settings.dataType === 'html' && !!that.settings.containerContent) {
+                            if (that.settings.dataType === 'html' && !!that.settings.contentView) {
 
-                                if ($(that.settings.containerContent).html(data)) {
+                                if ($(that.settings.contentView).html(data)) {
                                     // plugin .trigger method
                                     that.trigger('page.filled', data);
                                 }
 
+                            } else {
+                                console.warn('No container set, no data will be auto inserted.');
                             }
 
                         } else {
@@ -133,8 +142,8 @@
                 if (this.pages[pageIndex].content) {
 
                     // se tem um container de conteúdo definido, insere o conteúdo nele
-                    if (!!this.settings.containerContent) {
-                        this.settings.containerContent.innerHTML = this.pages[pageIndex].content;
+                    if (!!this.settings.contentView) {
+                        this.settings.contentView.innerHTML = this.pages[pageIndex].content;
                         this.trigger('page.filled', this.pages[pageIndex]);
                     }
 
@@ -281,4 +290,6 @@
 
     });
 
-})(window.jQuery, window, document);
+    return window[pluginName];
+
+})(window.jQuery || false, window, document);

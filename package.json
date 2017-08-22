@@ -1,0 +1,22 @@
+{
+  "name": "jquery.pageIt",
+  "version": "0.1.0",
+  "description": "Lib for build paginations.",
+  "main": "jquery.page-it.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/odahcam/jquery.page-it.git"
+  },
+  "keywords": [
+    "pagination"
+  ],
+  "author": "jquery",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/odahcam/jquery.page-it/issues"
+  },
+  "homepage": "https://github.com/odahcam/jquery.page-it#readme"
+}
