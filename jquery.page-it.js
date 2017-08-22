@@ -2,7 +2,7 @@
 
     var pluginName = 'pageIt';
 
-    if(!$) {
+    if (!$) {
         console.error(pluginName + ': Não foi possível reconhecer o jQuery, inicialização cancelada!');
         return false;
     }
@@ -27,7 +27,7 @@
     };
 
     // Constructor
-    window[pluginName] = function Pagination(options) {
+    window[pluginName] = function PageIt(options) {
 
         this.settings = $.extend(true, {}, defaults, options);
         this.events = {};
@@ -45,7 +45,7 @@
     };
 
     // Pagination Methods
-    $.extend(Pagination.prototype, {
+    $.extend(window[pluginName].prototype, {
 
         /**
          * Initialize module functionality.
