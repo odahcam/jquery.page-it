@@ -10,7 +10,7 @@
     var defaults = {
         url: '',
         method: 'get',
-        dataType: 'html',
+        // dataType: 'html',
         initPage: 1,
         cacheAjax: false,
         cachePagination: true,
@@ -89,7 +89,7 @@
                     url: this.settings.url,
                     method: this.settings.method,
                     data: this.requestData,
-                    dataType: this.settings.dataType,
+                    // dataType: this.settings.dataType,
                     success: function(data) {
 
                         that.pages[pageIndex] = data;
@@ -103,7 +103,7 @@
                         if (!!data) {
 
                             // se tem um container de conteúdo definido e a resposta é em HTML, insere o conteúdo nele
-                            if (that.settings.dataType === 'html' && !!that.settings.contentView) {
+                            if (/*that.settings.dataType === 'html' && */!!that.settings.contentView) {
 
                                 if ($(that.settings.contentView).html(data)) {
                                     // plugin .trigger method
@@ -244,7 +244,7 @@
                 url: this.settings.urlMeta,
                 method: this.settings.method,
                 data: this.pageMeta,
-                dataType: 'json',
+                // dataType: 'json',
                 success: function(data) {
 
                     that.trigger('page.meta.loaded', data);

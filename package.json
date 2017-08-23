@@ -18,5 +18,8 @@
     "bugs": {
         "url": "https://github.com/odahcam/jquery.page-it/issues"
     },
-    "homepage": "https://github.com/odahcam/jquery.page-it#readme"
+    "homepage": "https://github.com/odahcam/jquery.page-it#readme",
+    "dependencies": {
+        "jquery": "2.x"
+    }
 }
