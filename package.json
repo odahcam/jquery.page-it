@@ -1,7 +1,7 @@
 {
     "name": "jquery.page-it",
-    "version": "0.1.2",
-    "description": "Lib for build paginations.",
+    "version": "0.2.0",
+    "description": "Lib for building paginations.",
     "main": "jquery.page-it.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
