@@ -1,56 +1,25 @@
-(function ($, window, document, undefined) {
+(function($, window, document, undefined) {
 
     var pluginName = 'pageIt';
 
     var logger = {
-        log: function () {
-            console.log(pluginName + ": " + arguments[0], Array.prototype.slice.call(arguments, 1));
+        log: function() {
+            console.log(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        info: function () {
-            console.info(pluginName + ": " + arguments[0], Array.prototype.slice.call(arguments, 1));
+        info: function() {
+            console.info(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        warn: function () {
-            console.warn(pluginName + ": " + arguments[0], Array.prototype.slice.call(arguments, 1));
+        warn: function() {
+            console.warn(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        error: function () {
-            console.error(pluginName + ": " + arguments[0], Array.prototype.slice.call(arguments, 1));
+        error: function() {
+            console.error(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
     };
 
     if (!$) {
-        logger.error(pluginName + ': Não foi possível reconhecer o jQuery, inicialização cancelada!');
+        logger.error('Não foi possível reconhecer o jQuery, inicialização cancelada!');
         return false;
-    }
-
-    /*
-     * Polyfill
-     */
-    // Production steps of ECMA-262, Edition 5, 15.4.4.17
-    // Reference: http://es5.github.io/#x15.4.4.17
-    if (!Array.prototype.some) {
-        Array.prototype.some = function (fun/*, thisArg*/) {
-            'use strict';
-
-            if (this == null) {
-                throw new TypeError('Array.prototype.some called on null or undefined');
-            }
-
-            if (typeof fun !== 'function') {
-                throw new TypeError();
-            }
-
-            var t = Object(this);
-            var len = t.length >>> 0;
-
-            var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
-            for (var i = 0; i < len; i++) {
-                if (i in t && fun.call(thisArg, t[i], i, t)) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
     }
 
 
@@ -135,7 +104,7 @@
         /**
          * Initialize module functionality.
          **/
-        init: function () {
+        init: function() {
 
             this.trigger('ready');
 
@@ -146,7 +115,7 @@
         /**
          * @param {intger} pageIndex
          **/
-        to: function (pageIndex) {
+        to: function(pageIndex) {
 
             if (this.requesting === true) {
                 logger.warn('Uma requisição de página já está em andamento, esta requisição será ignorada.');
@@ -174,6 +143,7 @@
                 this.requestData = {};
                 this.requestData.pageIndex = pageIndex;
 
+                // user can moddify the requestData here, before the AJAX call.
                 this.trigger('page.load.before', this.requestData);
 
                 var that = this;
@@ -187,7 +157,7 @@
                     method: this.settings.method,
                     data: this.requestData,
                     dataType: this.settings.dataType,
-                    success: function (data, status, response) {
+                    success: function(data, status, response) {
 
                         /*
                         data: {
@@ -210,17 +180,7 @@
 
                             that.trigger('page.load.loaded', data);
 
-                            // se tem um container de conteúdo definido e a resposta é em HTML, insere o conteúdo nele
-                            if (!!that.settings.contentView) {
-
-                                if ($(that.settings.contentView).html(data.content)) {
-                                    // plugin .trigger method
-                                    that.trigger('page.load.autoupdated', data);
-                                }
-
-                            } else {
-                                logger.warn('No container set, no data will be auto inserted.');
-                            }
+                            that.fillContainer(data.content);
 
                         } else {
 
@@ -229,13 +189,13 @@
                         }
 
                     },
-                    error: function (response) {
+                    error: function(response) {
                         logger.error('Erro ao carregar página.');
                         console.log(response);
 
                         that.trigger('page.load.error', response);
                     },
-                    complete: function (response) {
+                    complete: function(response) {
 
                         that.requesting = false;
 
@@ -251,11 +211,7 @@
 
                 if (this.pages[pageIndex].content) {
 
-                    // se tem um container de conteúdo definido, insere o conteúdo nele
-                    if (!!this.settings.contentView) {
-                        this.settings.contentView.innerHTML = this.pages[pageIndex].content;
-                        this.trigger('page.filled', this.pages[pageIndex]);
-                    }
+                    this.fillContainer(this.pages[pageIndex].content);
 
                     this.trigger('page.load.loaded', this.pages[pageIndex]);
                     this.trigger('page.load.cache', this.pages[pageIndex]);
@@ -272,9 +228,27 @@
         },
 
         /**
+         * Se tem um container de conteúdo definido e a resposta é em HTML, insere o conteúdo nele
+         */
+        fillContainer: function fillContainer(data) {
+
+            if (!!this.settings.contentView) {
+
+                if ($(this.settings.contentView).html(data.content)) {
+                    // plugin .trigger method
+                    this.trigger('page.load.autoupdated', data);
+                }
+
+            } else {
+                logger.warn('No container set, no data will be auto inserted.');
+            }
+
+        },
+
+        /**
          * Calls .to() with page number meta.first as parameter.
          **/
-        first: function () {
+        first: function() {
             this.trigger('page.first', this.meta.first);
             return this.to(this.meta.first);
         },
@@ -282,7 +256,7 @@
         /**
          * Calls .to() with page number meta.current - 1 as parameter.
          **/
-        prev: function () {
+        prev: function() {
             this.trigger('page.prev', this.meta.next);
             return this.to(this.meta.prev);
         },
@@ -290,7 +264,7 @@
         /**
          * Calls .to() with page number meta.current + 1 as parameter.
          **/
-        next: function () {
+        next: function() {
             this.trigger('page.next', this.meta.next);
             return this.to(this.meta.next);
         },
@@ -298,7 +272,7 @@
         /**
          * Calls .to() with page number meta.last as parameter.
          **/
-        last: function () {
+        last: function() {
             this.trigger('page.last', this.meta.last);
             return this.to(this.meta.last);
         },
@@ -309,29 +283,20 @@
          * @param {function} fn
          * @return {object}
          **/
-        on: function (eventName, fn) {
+        on: function(eventName, fn) {
 
             if (eventName.match(' ')) {
-                eventname.split(' ').forEach(function (eventName) {
+                eventname.split(' ').forEach(function(eventName) {
                     this.on(eventName, fn);
                 });
             } else {
-                //if (fn.name) {
-                    if (!this.events[eventName]) {
-                        logger.warn('Evento indisponível.');
-                        throw new Error('Can\'t attach unrecognized event handler.');
-                    }
 
-                    var x = this.events[eventName].some(function (t) {
-                        return t === fn;
-                    }) || this.events[eventName].indexOf(fn);
+                if (!this.events[eventName]) {
+                    logger.warn('Evento indisponível.');
+                    throw new Error('Can\'t attach unrecognized event handler.');
+                }
 
-                    //if (x > -1) return this;
-
-                    this.events[eventName].push(fn);
-                //} else {
-                //    throw new Error('Funções anônimas não são permitidas.');
-                //}
+                this.events[eventName].push(fn);
             }
 
             return this;
@@ -343,14 +308,14 @@
          * @param {undefined} arguments
          * @example this.trigger('event'[, data, response, etc]);
          **/
-        trigger: function (eventName) {
+        trigger: function(eventName) {
 
             if (this.events[eventName] && this.events[eventName].length) {
 
                 var that = this,
                     args = arguments;
 
-                this.events[eventName].map(function (fnName) {
+                this.events[eventName].map(function(fnName) {
 
                     fnName.apply(that, Array.prototype.slice.call(args, 1)); // Array.prototype.slice will convert the arguments object
 
@@ -361,13 +326,8 @@
             return this;
         },
 
-        setData: function (object) {
-
-            $.extend(this.requestData, object);
-
-        },
-
-        setMeta: function (meta) {
+        setMeta: function(meta) {
+            // meta is not multilevel
             $.extend(this.meta, meta);
         }
 
