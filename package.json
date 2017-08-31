@@ -1,6 +1,6 @@
 {
     "name": "jquery.page-it",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "description": "Lib for building paginations.",
     "main": "jquery.page-it.js",
     "scripts": {
