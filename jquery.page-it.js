@@ -140,8 +140,7 @@
                  * so the programer can replace it.
                  * Auto set the pageIndex that will be requested.
                  */
-                this.requestData = {};
-                this.requestData.pageIndex = pageIndex;
+                this.requestData = { pageIndex: pageIndex };
 
                 // user can moddify the requestData here, before the AJAX call.
                 this.trigger('page.load.before', this.requestData);
