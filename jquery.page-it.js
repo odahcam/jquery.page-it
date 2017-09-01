@@ -42,8 +42,8 @@
          * @var {bool} cache : if should store loaded pages (and load'em from) in a local storage or not
          */
         cache: true,
-        url: '',
-        method: 'get',
+        url: '', // @TODO: move it inside ajax key
+        method: 'get', // @TODO: move it inside ajax key
         dataType: 'json',
         /**
          * @var {object} jQuery.AJAX configuration options.
