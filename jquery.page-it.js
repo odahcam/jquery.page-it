@@ -1,18 +1,18 @@
-(function($, window, document, undefined) {
+(function ($, window, document, undefined) {
 
     var pluginName = 'pageIt';
 
     var logger = {
-        log: function() {
+        log: function () {
             console.log(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        info: function() {
+        info: function () {
             console.info(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        warn: function() {
+        warn: function () {
             console.warn(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        error: function() {
+        error: function () {
             console.error(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
     };
@@ -35,9 +35,9 @@
 
     var defaults = {
         /**
-         * @var {int?} The page where the plugin should start.
+         * @var {bool} If should auto start loading the current page or not.
          */
-        initPage: null,
+        autoStart: false,
         /**
          * @var {bool} cache : if should store loaded pages (and load'em from) in a local storage or not
          */
@@ -89,9 +89,10 @@
         this.requesting = false;
 
         this.meta = this.settings.meta;
-        this.meta.prev = this.settings.initPage - 1;
-        this.meta.current = this.settings.initPage;
-        this.meta.next = this.settings.initPage + 1;
+
+        if (this.meta.current) {
+            this.setCurrent(this.meta.current);
+        }
 
         this.requestData = {};
 
@@ -104,18 +105,18 @@
         /**
          * Initialize module functionality.
          **/
-        init: function() {
+        init: function () {
 
             this.trigger('ready');
 
-            if (!!this.settings.initPage)
-                this.to(this.settings.initPage);
+            if (!!this.settings.autoStart)
+                this.to(this.meta.current);
         },
 
         /**
          * @param {intger} pageIndex
          **/
-        to: function(pageIndex) {
+        to: function (pageIndex) {
 
             if (this.requesting === true) {
                 logger.warn('Uma requisição de página já está em andamento, esta requisição será ignorada.');
@@ -156,7 +157,7 @@
                     method: this.settings.method,
                     data: this.requestData,
                     dataType: this.settings.dataType,
-                    success: function(data, status, response) {
+                    success: function (data, status, response) {
 
                         /*
                         data: {
@@ -167,9 +168,7 @@
 
                         that.pages[pageIndex] = data.content;
 
-                        that.meta.prev = pageIndex - 1;
-                        that.meta.current = pageIndex;
-                        that.meta.next = pageIndex + 1;
+                        that.setCurrent(pageIndex);
 
                         if (data.meta) {
                             that.setMeta(data.meta);
@@ -188,13 +187,13 @@
                         }
 
                     },
-                    error: function(response) {
+                    error: function (response) {
                         logger.error('Erro ao carregar página.');
                         console.log(response);
 
                         that.trigger('page.load.error', response);
                     },
-                    complete: function(response) {
+                    complete: function (response) {
 
                         that.requesting = false;
 
@@ -247,7 +246,7 @@
         /**
          * Calls .to() with page number meta.first as parameter.
          **/
-        first: function() {
+        first: function () {
             this.trigger('page.first', this.meta.first);
             return this.to(this.meta.first);
         },
@@ -255,7 +254,7 @@
         /**
          * Calls .to() with page number meta.current - 1 as parameter.
          **/
-        prev: function() {
+        prev: function () {
             this.trigger('page.prev', this.meta.next);
             return this.to(this.meta.prev);
         },
@@ -263,7 +262,7 @@
         /**
          * Calls .to() with page number meta.current + 1 as parameter.
          **/
-        next: function() {
+        next: function () {
             this.trigger('page.next', this.meta.next);
             return this.to(this.meta.next);
         },
@@ -271,7 +270,7 @@
         /**
          * Calls .to() with page number meta.last as parameter.
          **/
-        last: function() {
+        last: function () {
             this.trigger('page.last', this.meta.last);
             return this.to(this.meta.last);
         },
@@ -282,10 +281,10 @@
          * @param {function} fn
          * @return {object}
          **/
-        on: function(eventName, fn) {
+        on: function (eventName, fn) {
 
             if (eventName.match(' ')) {
-                eventname.split(' ').forEach(function(eventName) {
+                eventname.split(' ').forEach(function (eventName) {
                     this.on(eventName, fn);
                 });
             } else {
@@ -302,19 +301,44 @@
         },
 
         /**
+         * Removes callbacks for the received event name.
+         * @param {string} eventName
+         * @param {function} fn
+         * @return {object}
+         **/
+        off: function (eventName, fn) {
+
+            if (eventName.match(' ')) {
+                eventname.split(' ').forEach(function (eventName) {
+                    this.off(eventName, fn);
+                });
+            } else {
+
+                if (!this.events[eventName]) {
+                    logger.warn('Evento indisponível.');
+                    throw new Error('Can\'t remove unrecognized event handler.');
+                }
+
+                this.events[eventName] = [];
+            }
+
+            return this;
+        },
+
+        /**
          * Event handler, can call any registered event.
          * @param {string} eventName
          * @param {undefined} arguments
          * @example this.trigger('event'[, data, response, etc]);
          **/
-        trigger: function(eventName) {
+        trigger: function (eventName) {
 
             if (this.events[eventName] && this.events[eventName].length) {
 
                 var that = this,
                     args = arguments;
 
-                this.events[eventName].map(function(fnName) {
+                this.events[eventName].map(function (fnName) {
 
                     fnName.apply(that, Array.prototype.slice.call(args, 1)); // Array.prototype.slice will convert the arguments object
 
@@ -325,9 +349,15 @@
             return this;
         },
 
-        setMeta: function(meta) {
+        setMeta: function (meta) {
             // meta is not multilevel
             $.extend(this.meta, meta);
+        },
+
+        setCurrent: function (current) {
+            this.meta.current = current;
+            this.meta.prev = current - 1;
+            this.meta.next = current + 1;
         }
 
     });
