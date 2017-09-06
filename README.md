@@ -30,31 +30,31 @@ Default options are:
 
 ```javascript
 {
-    /**
-     * @var {int?} The page where the plugin should start.
-     */
-    initPage: null,
-    /**
-     * @var {bool} cache : if should store loaded pages (and load'em from) in a local storage or not
-     */
-    cache: true,
-    url: '',
-    method: 'get',
-    dataType: 'json',
-    /**
-     * @var {object} jQuery.AJAX configuration options.
-     */
-    ajax: {
-        cache: false,
-        global: true,
-    },
-    /**
-     * @var {HTMLElement} contentView : if you define this, you will have auto page content updates
-     */
-    contentView: null,
-    /**
-     * @var {object}
-     */
-    meta: metaSchema
+/**
+ * @var {bool} If should auto start loading the current page or not.
+ */
+autoStart: false,
+/**
+ * @var {bool} cache : if should store loaded pages (and load'em from) in a local storage or not
+ */
+cache: true,
+url: '', // @TODO: move it inside ajax key
+method: 'get', // @TODO: move it inside ajax key
+dataType: 'json',
+/**
+ * @var {object} jQuery.AJAX configuration options.
+ */
+ajax: {
+    cache: false,
+    global: true,
+},
+/**
+ * @var {HTMLElement} contentView : if you define this, you will have auto page content updates
+ */
+contentView: null,
+/**
+ * @var {object}
+ */
+meta: metaSchema
 }
 ```
