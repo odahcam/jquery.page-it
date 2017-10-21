@@ -99,7 +99,7 @@
     };
 
     // Pagination Methods
-    $.extend(window[pluginName].prototype, {
+    Object.assign(window[pluginName].prototype, {
 
         /**
          * Initialize module functionality.
@@ -113,37 +113,37 @@
         },
 
         /**
-         * @param {intger} pageIndex
+         * @param {intger} page
          **/
-        to: function (pageIndex) {
+        to: function (page) {
 
             if (this.requesting === true) {
                 logger.warn('Uma requisição de página já está em andamento, esta requisição será ignorada.');
                 return false;
             }
 
-            if (!pageIndex || (this.meta.last && pageIndex > this.meta.last)) {
+            if (!page || (this.meta.last && page > this.meta.last)) {
                 this.trigger('page.load.skipped', {});
                 this.trigger('page.load.last', {});
                 return false;
             }
 
             // if index is a string like 'next' or 'prev', it will be translated by calling it's manager
-            if (typeof pageIndex === 'string' && pageIndex === 'next' || pageIndex === 'prev') {
-                return this[pageIndex]();
+            if (typeof page === 'string' && page === 'next' || page === 'prev') {
+                return this[page]();
             }
 
-            if (!this.settings.cache || !this.pages[pageIndex]) {
+            if (!this.settings.cache || !this.pages[page]) {
 
                 /*
                  * reset requestData object before triggering the beforeLoad,
                  * so the programer can replace it.
-                 * Auto set the pageIndex that will be requested.
+                 * Auto set the page that will be requested.
                  */
-                this.requestData = { pageIndex: pageIndex };
+                this.requestData = { page: page };
 
                 // user can moddify the requestData here, before the AJAX call.
-                this.trigger('page.load.before', this.requestData);
+                this.trigger('page.load.before', this);
 
                 var that = this;
 
@@ -165,9 +165,9 @@
                         }
                         */
 
-                        that.pages[pageIndex] = data.content;
+                        that.pages[page] = data.content;
 
-                        that.setCurrent(pageIndex);
+                        that.setCurrent(page);
 
                         if (data.meta) {
                             that.setMeta(data.meta);
@@ -206,16 +206,16 @@
 
             } else {
 
-                if (this.pages[pageIndex].content) {
+                if (this.pages[page].content) {
 
-                    this.fillContainer(this.pages[pageIndex].content);
+                    this.fillContainer(this.pages[page].content);
 
-                    this.trigger('page.load.loaded', this.pages[pageIndex]);
-                    this.trigger('page.load.cache', this.pages[pageIndex]);
+                    this.trigger('page.load.loaded', this.pages[page]);
+                    this.trigger('page.load.cache', this.pages[page]);
 
                 } else {
 
-                    this.trigger('page.load.empty', this.pages[pageIndex]);
+                    this.trigger('page.load.empty', this.pages[page]);
 
                 }
 
@@ -352,7 +352,19 @@
 
         setMeta: function (meta) {
             // meta is not multilevel
-            $.extend(this.meta, meta);
+            Object.assign(this.meta, meta);
+        },
+
+        /**
+         * A function that accepts a callback to update the request data.
+         * Everytime the pagination makes a request,
+         * this function will be used to get its new data.
+         *
+         * @param {object} requestData
+         */
+        setRequestData: function (requestData) {
+            // by default, request data is not multilevel
+            Object.assign(this.requestData, requestData);
         },
 
         setCurrent: function (current) {
