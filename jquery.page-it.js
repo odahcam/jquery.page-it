@@ -22,7 +22,6 @@
         return false;
     }
 
-
     var metaSchema = {
         size: null,
         first: 1,
@@ -42,20 +41,20 @@
          * @var {bool} cache : if should store loaded pages (and load'em from) in a local storage or not
          */
         cache: true,
-        url: '', // @TODO: move it inside ajax key
-        method: 'get', // @TODO: move it inside ajax key
         dataType: 'json',
         /**
          * @var {object} jQuery.AJAX configuration options.
          */
         ajax: {
+            url: '', // @TODO: move it inside ajax key
+            method: 'get', // @TODO: move it inside ajax key
             cache: false,
             global: true,
         },
         /**
-         * @var {HTMLElement} contentView : if you define this, you will have auto page content updates
+         * @var {HTMLElement} target : if you define this, you will have auto page content updates
          */
-        contentView: null,
+        target: null,
         /**
          * @var {object}
          */
@@ -153,8 +152,8 @@
                 $.ajax({
                     cache: this.settings.ajax.cache,
                     global: this.settings.ajax.global,
-                    url: this.settings.url,
-                    method: this.settings.method,
+                    url: this.settings.ajax.url,
+                    method: this.settings.ajax.method,
                     data: this.requestData,
                     dataType: this.settings.dataType,
                     success: function (data, status, response) {
@@ -226,13 +225,15 @@
         },
 
         /**
-         * Se tem um container de conteúdo definido e a resposta é em HTML, insere o conteúdo nele
+         * Se tem um container de conteúdo definido e a resposta é em HTML, insere o conteúdo nele.
+         *
+         * @param {string} data : The HTML data to be inserted in the view.
          */
         fillContainer: function fillContainer(data) {
 
-            if (!!this.settings.contentView) {
+            if (!!this.settings.target) {
 
-                if ($(this.settings.contentView).html(data.content)) {
+                if ($(this.settings.target).html(data)) {
                     // plugin .trigger method
                     this.trigger('page.load.autoupdated', data);
                 }
@@ -245,7 +246,7 @@
 
         /**
          * Calls .to() with page number meta.first as parameter.
-         **/
+         */
         first: function () {
             this.trigger('page.first', this.meta.first);
             return this.to(this.meta.first);
