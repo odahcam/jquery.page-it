@@ -278,8 +278,10 @@
 
         /**
          * Register callbacks for the received event name.
+         *
          * @param {string} eventName
          * @param {function} fn
+         *
          * @return {object}
          **/
         on: function (eventName, fn) {
@@ -303,8 +305,10 @@
 
         /**
          * Removes callbacks for the received event name.
+         *
          * @param {string} eventName
          * @param {function} fn
+         *
          * @return {object}
          **/
         off: function (eventName, fn) {
@@ -328,8 +332,10 @@
 
         /**
          * Event handler, can call any registered event.
+         *
          * @param {string} eventName
          * @param {undefined} arguments
+         *
          * @example this.trigger('event'[, data, response, etc]);
          **/
         trigger: function (eventName) {
@@ -350,6 +356,9 @@
             return this;
         },
 
+        /**
+         * @param {object} meta
+         */
         setMeta: function (meta) {
             // meta is not multilevel
             Object.assign(this.meta, meta);
@@ -367,6 +376,9 @@
             Object.assign(this.requestData, requestData);
         },
 
+        /**
+         * @param {int} current
+         */
         setCurrent: function (current) {
             this.meta.current = current;
             this.meta.prev = current - 1;
