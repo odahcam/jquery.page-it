@@ -206,9 +206,9 @@
 
             } else {
 
-                if (this.pages[page].content) {
+                if (this.pages[page]) {
 
-                    this.fillContainer(this.pages[page].content);
+                    this.fillContainer(this.pages[page]);
 
                     this.trigger('page.load.loaded', this.pages[page]);
                     this.trigger('page.load.cache', this.pages[page]);
