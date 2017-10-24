@@ -3,13 +3,13 @@
 
 With this lib you can fully manipulate pagination events and fetch information from an endpoint.
 
-Also you can, in fact you must (if you want to use it), integrate this tool with your own pagination.
+Also you can, in fact you must (if you want to use it), integrate this tool with your own pagination component.
 
 ## Instalation
 
 Download it via `npm`:
 
-`npm install jquery.page-it@0.3.0`
+`npm i jquery.page-it@latest --save`
 
 ## Available Methods
 
@@ -38,22 +38,21 @@ autoStart: false,
  * @var {bool} cache : if should store loaded pages (and load'em from) in a local storage or not
  */
 cache: true,
-url: '', // @TODO: move it inside ajax key
-method: 'get', // @TODO: move it inside ajax key
-dataType: 'json',
 /**
  * @var {object} jQuery.AJAX configuration options.
  */
 ajax: {
     cache: false,
     global: true,
+    url: '',
+    method: 'get',
 },
 /**
- * @var {HTMLElement} contentView : if you define this, you will have auto page content updates
+ * @var {HTMLElement} If you define this, you will have auto page content updates in the desired element.
  */
-contentView: null,
+replace: null,
 /**
- * @var {object}
+ * @var {object} The initial meta information for controlling the pages.
  */
 meta: metaSchema
 }
