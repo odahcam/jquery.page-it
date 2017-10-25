@@ -104,7 +104,7 @@
 
         /**
          * Initialize module functionality.
-         **/
+         */
         init: function() {
 
             this.trigger('ready');
@@ -115,7 +115,7 @@
 
         /**
          * @param {intger} page
-         **/
+         */
         to: function(page) {
 
             if (this.requesting === true) {
@@ -292,7 +292,7 @@
 
         /**
          * Calls .to() with page number meta.current - 1 as parameter.
-         **/
+         */
         prev: function() {
             this.trigger('page.prev', this.meta.next);
             return this.to(this.meta.prev);
@@ -300,7 +300,7 @@
 
         /**
          * Calls .to() with page number meta.current + 1 as parameter.
-         **/
+         */
         next: function() {
             this.trigger('page.next', this.meta.next);
             return this.to(this.meta.next);
@@ -308,7 +308,7 @@
 
         /**
          * Calls .to() with page number meta.last as parameter.
-         **/
+         */
         last: function() {
             this.trigger('page.last', this.meta.last);
             return this.to(this.meta.last);
@@ -321,7 +321,7 @@
          * @param {function} fn
          *
          * @return {object}
-         **/
+         */
         on: function(eventName, fn) {
 
             if (eventName.match(' ')) {
@@ -348,7 +348,7 @@
          * @param {function} fn
          *
          * @return {object}
-         **/
+         */
         off: function(eventName, fn) {
 
             if (eventName.match(' ')) {
