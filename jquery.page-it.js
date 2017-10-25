@@ -46,8 +46,7 @@
          * @var {object} jQuery.AJAX configuration options.
          */
         ajax: {
-            url: '', // @TODO: move it inside ajax key
-            method: 'get', // @TODO: move it inside ajax key
+            url: '',
             cache: false,
             global: true,
         },
@@ -65,6 +64,7 @@
     window[pluginName] = function PageIt(options) {
 
         this.settings = $.extend(true, {}, defaults, options);
+
         this.events = {
             'ready': [],
             'page.load.empty': [],
@@ -83,6 +83,7 @@
             'page.next': [],
             'page.last': [],
         };
+
         this.pages = [];
 
         this.requesting = false;
@@ -149,21 +150,19 @@
 
                 this.requesting = true;
 
-                $.ajax({
-                    cache: this.settings.ajax.cache,
-                    global: this.settings.ajax.global,
-                    url: this.settings.ajax.url,
-                    method: this.settings.ajax.method,
-                    data: this.requestData,
-                    dataType: this.settings.dataType,
-                    success: function (data, status, response) {
+                // ajax
+                var xhr = new XMLHttpRequest();
 
-                        /*
-                        data: {
-                            meta: {...}
-                            content: [HTML String]
-                        }
-                        */
+                if (this.settings.ajax.cache == false) {
+                    xhr.setRequestHeader('Cache-Control', 'no-cache');
+                }
+
+                // xhr.addEventListener('progress', null, false);
+
+                xhr.addEventListener('load', function (data, status, response) {
+
+                    // success
+                    if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
 
                         that.pages[page] = data.content;
 
@@ -184,25 +183,51 @@
                             that.trigger('page.load.empty', data);
 
                         }
-
-                    },
-                    error: function (response) {
-                        logger.error('Erro ao carregar página.');
-                        console.log(response);
-
-                        that.trigger('page.load.error', response);
-                    },
-                    complete: function (response) {
-
-                        that.requesting = false;
-
-                        // plugin .trigger method
-                        that.trigger('page.load.after', response);
-
-                        console.groupEnd();
-
+                        // Request finished. Do processing here.
                     }
-                });
+
+                    that.trigger('page.load.after', that);
+                    that.requesting = false;
+                    console.groupEnd();
+
+                }, false);
+
+                xhr.addEventListener('error', function (response) {
+
+                    logger.error('Erro ao carregar página.');
+                    console.log(response);
+
+                    that.trigger('page.load.error', response);
+
+
+                    that.trigger('page.load.after', that);
+                    that.requesting = false;
+                    console.groupEnd();
+
+                }, false);
+
+                xhr.addEventListener('abort', function () {
+
+                    that.trigger('page.load.abort', response);
+
+
+                    that.trigger('page.load.after', that);
+                    that.requesting = false;
+                    console.groupEnd();
+
+                }, false);
+
+                // request.open();
+                // xhr.open(method, url, async, user, password);
+                xhr.open('GET', this.settings.ajax.url);
+
+                xhr.send(null);
+                // xhr.send('string');
+                // xhr.send(new Blob());
+                // xhr.send(new Int8Array());
+                // xhr.send({ form: 'data' });
+                // xhr.send(document);
+                // /ajax
 
             } else {
 
