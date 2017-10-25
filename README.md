@@ -13,16 +13,18 @@ Download it via `npm`:
 
 ## Available Methods
 
-| Methods   | Params                                    | Description                                                                    |
-|-----------|-------------------------------------------|--------------------------------------------------------------------------------|
-| `first`   | `void`                                    | Loads first page.                                                              |
-| `prev`    | `void`                                    | Loads previous page.                                                           |
-| `next`    | `void`                                    | Loads next page.                                                               |
-| `last`    | `void`                                    | Loads last page.                                                               |
-| `to`      | `{int} pageIndex`                         | Loads the specifyied page.                                                     |
-| `on`      | `{string} eventName, {callable} callback` | Registers an event listener.                                                   |
-| `trigger` | `{string} eventName, {object} data`       | Triggers an event.                                                             |
-| `setMeta` | `{object} meta`                           | Sets the `meta` property, this property is used to control pagination numbers. |
+| Methods          | Params                                    | Description                                                                    |
+|------------------|-------------------------------------------|--------------------------------------------------------------------------------|
+| `first`          | `void`                                    | Loads first page.                                                              |
+| `prev`           | `void`                                    | Loads previous page.                                                           |
+| `next`           | `void`                                    | Loads next page.                                                               |
+| `last`           | `void`                                    | Loads last page.                                                               |
+| `to`             | `{int} pageIndex`                         | Loads the specifyied page.                                                     |
+| `on`             | `{string} eventName, {callable} callback` | Registers an event listener.                                                   |
+| `trigger`        | `{string} eventName, {object} data`       | Triggers an event.                                                             |
+| `setMeta`        | `{object} meta`                           | Sets the `meta` property, this property is used to control pagination numbers. |
+| `setCurrent`     | `{object} requestData`                    | Accepts a callback to update the request data.                                 |
+| `setRequestData` | `{int} current`                           | Sets the current page and updates dependent meta.                              |
 
 ## Options
 
@@ -30,29 +32,29 @@ Default options are:
 
 ```javascript
 {
-/**
- * @var {bool} autoStart If should auto start loading the current page or not.
- */
-autoStart: false,
-/**
- * @var {bool} cache : if should store loaded pages (and load'em from) in a local storage or not
- */
-cache: true,
-/**
- * @var {object} ajax jQuery.AJAX configuration options.
- */
-ajax: {
-    url: '',
-    cache: false,
-    global: true,
-},
-/**
- * @var {HTMLElement} replace If you define this, you will have auto page content updates in the desired element.
- */
-replace: null,
-/**
- * @var {object} meta The initial meta information for controlling the pages.
- */
-meta: metaSchema
+    /**
+     * @var {bool} autoStart If should auto start loading the current page or not.
+     */
+    autoStart: false,
+    /**
+     * @var {bool} cache : if should store loaded pages (and load'em from) in a local storage or not
+     */
+    cache: true,
+    /**
+     * @var {object} ajax jQuery.AJAX configuration options.
+     */
+    ajax: {
+        url: '',
+        cache: false,
+        global: true,
+    },
+    /**
+     * @var {HTMLElement} replace If you define this, you will have auto page content updates in the desired element.
+     */
+    replace: null,
+    /**
+     * @var {object} meta The initial meta information for controlling the pages.
+     */
+    meta: metaSchema
 }
 ```

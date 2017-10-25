@@ -370,7 +370,7 @@
         },
 
         /**
-         * A function that accepts a callback to update the request data.
+         * Accepts a callback to update the request data.
          * Everytime the pagination makes a request,
          * this function will be used to get its new data.
          *
@@ -382,6 +382,8 @@
         },
 
         /**
+         * Sets the current page and updates dependent meta.
+         *
          * @param {int} current
          */
         setCurrent: function(current) {
