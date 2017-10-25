@@ -158,6 +158,10 @@
                     dataType: this.settings.dataType,
                     success: function (data, status, response) {
                         
+                        if (data.meta) {
+                            that.setMeta(data.meta);
+                        }
+                        
                         // retrieves the meta information from the HTTP headers
                         var meta = {
                             current: response.getResponseHeader('X-Page-Current'),
@@ -171,10 +175,6 @@
                         
                         // updates the meta information
                         that.setMeta(meta);
-                        
-                        if (data.meta) {
-                            that.setMeta(data.meta);
-                        }
 
                         that.pages[page] = data.content;
 
