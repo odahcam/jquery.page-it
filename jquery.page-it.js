@@ -146,7 +146,7 @@
                 };
 
                 // user can moddify the requestData here, before the AJAX call.
-                this.trigger('page.load.before', this);
+                this.trigger('page.load.before', this.requestData);
 
                 var that = this;
 
@@ -371,11 +371,13 @@
         /**
          * Event handler, can call any registered event.
          *
-         * @param {string} eventName
-         * @param {undefined} arguments
+         * @param {string} eventName O nome do evento a ser disparados.
+         * @param {...any} arguments
          *
          * @example this.trigger('event'[, data, response, etc]);
-         **/
+         *
+         * @return {object} Retorna o PageIt para encadeamento.
+         */
         trigger: function(eventName) {
 
             if (this.events[eventName] && this.events[eventName].length) {
@@ -403,7 +405,7 @@
         },
 
         /**
-         * Accepts a callback to update the request data.
+         * A function that accepts a callback to update the request data.
          * Everytime the pagination makes a request,
          * this function will be used to get its new data.
          *
@@ -415,14 +417,12 @@
         },
 
         /**
-         * Sets the current page and updates dependent meta.
-         *
          * @param {int} current
          */
         setCurrent: function(current) {
             this.meta.current = current;
-            this.meta.prev = current - 1;
-            this.meta.next = current + 1;
+            this.meta.prev = current - 1 > 0 ? current : null;
+            this.meta.next = ++current;
         }
 
     });
