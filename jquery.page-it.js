@@ -1,18 +1,18 @@
-(function ($, window, document, undefined) {
+(function($, window, document, undefined) {
 
     var pluginName = 'pageIt';
 
     var logger = {
-        log: function () {
+        log: function() {
             console.log(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        info: function () {
+        info: function() {
             console.info(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        warn: function () {
+        warn: function() {
             console.warn(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        error: function () {
+        error: function() {
             console.error(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
     };
@@ -51,13 +51,9 @@
             global: true,
         },
         /**
-         * @var {HTMLElement} target : If you define this, you will have auto page content updates.
+         * @var {HTMLElement} target : if you define this, you will have auto page content updates
          */
         target: null,
-        /**
-         * @var {string} fillMode : The fill mode to use when pagrIt will do something with the target.
-         */
-        fillMode: 'replace',
         /**
          * @var {object}
          */
@@ -68,7 +64,6 @@
     window[pluginName] = function PageIt(options) {
 
         this.settings = $.extend(true, {}, defaults, options);
-
         this.events = {
             'ready': [],
             'page.load.empty': [],
@@ -87,7 +82,6 @@
             'page.next': [],
             'page.last': [],
         };
-
         this.pages = [];
 
         this.requesting = false;
@@ -108,8 +102,8 @@
 
         /**
          * Initialize module functionality.
-         */
-        init: function () {
+         **/
+        init: function() {
 
             this.trigger('ready');
 
@@ -119,8 +113,8 @@
 
         /**
          * @param {intger} page
-         */
-        to: function (page) {
+         **/
+        to: function(page) {
 
             if (this.requesting === true) {
                 logger.warn('Uma requisição de página já está em andamento, esta requisição será ignorada.');
@@ -150,42 +144,37 @@
                 };
 
                 // user can moddify the requestData here, before the AJAX call.
-                this.trigger('page.load.before', this.requestData);
+                this.trigger('page.load.before', this);
 
                 var that = this;
 
                 this.requesting = true;
 
-                // ajax
-                var xhr = new XMLHttpRequest();
-
-                if (this.settings.ajax.cache == false) {
-                    xhr.setRequestHeader('Cache-Control', 'no-cache');
-                }
-
-                // xhr.addEventListener('progress', null, false);
-
-                xhr.addEventListener('load', function (data, status, response) {
-
-                    // success
-                    if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-
-                        that.pages[page] = data.content;
+                $.ajax({
+                    cache: this.settings.ajax.cache,
+                    global: this.settings.ajax.global,
+                    url: this.settings.ajax.url,
+                    data: this.requestData,
+                    dataType: 'html', // expecting from the server
+                    method: 'GET', // get the page
+                    success: function(data, status, response) {
 
                         // retrieves the meta information from the HTTP headers
                         var meta = {
                             // @NOTE: talvez dê para fazer um loop que recupera os cabeçalhos basado no metaSchema.
-                            current: xhr.getResponseHeader('X-Page-Current'),
-                            size: xhr.getResponseHeader('X-Page-Size'),
-                            total: xhr.getResponseHeader('X-Page-Total'),
-                            first: xhr.getResponseHeader('X-Page-First'),
-                            prev: xhr.getResponseHeader('X-Page-Prev'),
-                            next: xhr.getResponseHeader('X-Page-Next'),
-                            last: xhr.getResponseHeader('X-Page-Last'),
+                            current: response.getResponseHeader('X-Page-Current'),
+                            size: response.getResponseHeader('X-Page-Size'),
+                            total: response.getResponseHeader('X-Page-Total'),
+                            first: response.getResponseHeader('X-Page-First'),
+                            prev: response.getResponseHeader('X-Page-Prev'),
+                            next: response.getResponseHeader('X-Page-Next'),
+                            last: response.getResponseHeader('X-Page-Last'),
                         };
 
                         // updates the meta information
                         that.setMeta(meta);
+
+                        that.pages[page] = data;
 
                         that.setCurrent(page);
 
@@ -200,51 +189,25 @@
                             that.trigger('page.load.empty', data);
 
                         }
-                        // Request finished. Do processing here.
+
+                    },
+                    error: function(response) {
+                        logger.error('Erro ao carregar página.');
+                        console.log(response);
+
+                        that.trigger('page.load.error', response);
+                    },
+                    complete: function(response) {
+
+                        that.requesting = false;
+
+                        // plugin .trigger method
+                        that.trigger('page.load.after', response);
+
+                        console.groupEnd();
+
                     }
-
-                    that.trigger('page.load.after', that);
-                    that.requesting = false;
-                    console.groupEnd();
-
-                }, false);
-
-                xhr.addEventListener('error', function (response) {
-
-                    logger.error('Erro ao carregar página.');
-                    console.log(response);
-
-                    that.trigger('page.load.error', response);
-
-
-                    that.trigger('page.load.after', that);
-                    that.requesting = false;
-                    console.groupEnd();
-
-                }, false);
-
-                xhr.addEventListener('abort', function () {
-
-                    that.trigger('page.load.abort', response);
-
-
-                    that.trigger('page.load.after', that);
-                    that.requesting = false;
-                    console.groupEnd();
-
-                }, false);
-
-                // request.open();
-                // xhr.open(method, url, async, user, password);
-                xhr.open('GET', this.settings.ajax.url);
-
-                xhr.send(null);
-                // xhr.send('string');
-                // xhr.send(new Blob());
-                // xhr.send(new Int8Array());
-                // xhr.send({ form: 'data' });
-                // xhr.send(document);
-                // /ajax
+                });
 
             } else {
 
@@ -275,30 +238,13 @@
 
             if (!!this.settings.target) {
 
-                var $target = $(this.settings.target);
-                var status = true;
-
-                switch (this.settings.fillMode) {
-
-                    case 'append':
-                        status = $target.append(data);
-                        break;
-
-                    default:
-                    case 'replace':
-                        status = $target.html(data);
-                        break;
-
-                }
-
-                if (status) {
+                if ($(this.settings.target).html(data)) {
+                    // plugin .trigger method
                     this.trigger('page.load.autoupdated', data);
-                } else {
-                    this.trigger('page.load.error', data);
                 }
 
             } else {
-                logger.info('No replacement target set, no DOM manipulation will be made.');
+                logger.info('No targetment target set, no DOM manipulation will be made.');
             }
 
         },
@@ -306,31 +252,31 @@
         /**
          * Calls .to() with page number meta.first as parameter.
          */
-        first: function () {
+        first: function() {
             this.trigger('page.first', this.meta.first);
             return this.to(this.meta.first);
         },
 
         /**
          * Calls .to() with page number meta.current - 1 as parameter.
-         */
-        prev: function () {
+         **/
+        prev: function() {
             this.trigger('page.prev', this.meta.next);
             return this.to(this.meta.prev);
         },
 
         /**
          * Calls .to() with page number meta.current + 1 as parameter.
-         */
-        next: function () {
+         **/
+        next: function() {
             this.trigger('page.next', this.meta.next);
             return this.to(this.meta.next);
         },
 
         /**
          * Calls .to() with page number meta.last as parameter.
-         */
-        last: function () {
+         **/
+        last: function() {
             this.trigger('page.last', this.meta.last);
             return this.to(this.meta.last);
         },
@@ -342,11 +288,11 @@
          * @param {function} fn
          *
          * @return {object}
-         */
-        on: function (eventName, fn) {
+         **/
+        on: function(eventName, fn) {
 
             if (eventName.match(' ')) {
-                eventname.split(' ').forEach(function (eventName) {
+                eventname.split(' ').forEach(function(eventName) {
                     this.on(eventName, fn);
                 });
             } else {
@@ -369,11 +315,11 @@
          * @param {function} fn
          *
          * @return {object}
-         */
-        off: function (eventName, fn) {
+         **/
+        off: function(eventName, fn) {
 
             if (eventName.match(' ')) {
-                eventname.split(' ').forEach(function (eventName) {
+                eventname.split(' ').forEach(function(eventName) {
                     this.off(eventName, fn);
                 });
             } else {
@@ -392,21 +338,19 @@
         /**
          * Event handler, can call any registered event.
          *
-         * @param {string} eventName O nome do evento a ser disparados.
-         * @param {...any} arguments
+         * @param {string} eventName
+         * @param {undefined} arguments
          *
          * @example this.trigger('event'[, data, response, etc]);
-         *
-         * @return {object} Retorna o PageIt para encadeamento.
-         */
-        trigger: function (eventName) {
+         **/
+        trigger: function(eventName) {
 
             if (this.events[eventName] && this.events[eventName].length) {
 
                 var that = this,
                     args = arguments;
 
-                this.events[eventName].map(function (fnName) {
+                this.events[eventName].map(function(fnName) {
 
                     fnName.apply(that, Array.prototype.slice.call(args, 1)); // Array.prototype.slice will convert the arguments object
 
@@ -420,30 +364,32 @@
         /**
          * @param {object} meta
          */
-        setMeta: function (meta) {
+        setMeta: function(meta) {
             // meta is not multilevel
             Object.assign(this.meta, meta);
         },
 
         /**
-         * A function that accepts a callback to update the request data.
+         * Accepts a callback to update the request data.
          * Everytime the pagination makes a request,
          * this function will be used to get its new data.
          *
          * @param {object} requestData
          */
-        setRequestData: function (requestData) {
+        setRequestData: function(requestData) {
             // by default, request data is not multilevel
             Object.assign(this.requestData, requestData);
         },
 
         /**
+         * Sets the current page and updates dependent meta.
+         *
          * @param {int} current
          */
-        setCurrent: function (current) {
+        setCurrent: function(current) {
             this.meta.current = current;
-            this.meta.prev = current - 1 > 0 ? current : null;
-            this.meta.next = ++current;
+            this.meta.prev = current - 1;
+            this.meta.next = current + 1;
         }
 
     });
