@@ -154,7 +154,7 @@
                     cache: this.settings.ajax.cache,
                     global: this.settings.ajax.global,
                     url: this.settings.ajax.url,
-                    data: this.requestData,
+                    data: $.extend({ pageIt: true }, this.requestData),
                     dataType: 'html', // expecting from the server
                     method: 'GET', // get the page
                     success: function(data, status, response) {
