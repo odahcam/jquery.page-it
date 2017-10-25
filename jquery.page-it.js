@@ -121,7 +121,9 @@
                 return false;
             }
 
-            if (!page || (this.meta.last && page > this.meta.last)) {
+            var last = this.meta.last || this.meta.total;
+
+            if (!page || (last && page > last)) {
                 this.trigger('page.load.skipped', {});
                 this.trigger('page.load.last', {});
                 return false;
