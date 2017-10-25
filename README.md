@@ -31,7 +31,7 @@ Default options are:
 ```javascript
 {
 /**
- * @var {bool} If should auto start loading the current page or not.
+ * @var {bool} autoStart If should auto start loading the current page or not.
  */
 autoStart: false,
 /**
@@ -39,20 +39,19 @@ autoStart: false,
  */
 cache: true,
 /**
- * @var {object} jQuery.AJAX configuration options.
+ * @var {object} ajax jQuery.AJAX configuration options.
  */
 ajax: {
+    url: '',
     cache: false,
     global: true,
-    url: '',
-    method: 'get',
 },
 /**
- * @var {HTMLElement} If you define this, you will have auto page content updates in the desired element.
+ * @var {HTMLElement} replace If you define this, you will have auto page content updates in the desired element.
  */
 replace: null,
 /**
- * @var {object} The initial meta information for controlling the pages.
+ * @var {object} meta The initial meta information for controlling the pages.
  */
 meta: metaSchema
 }
