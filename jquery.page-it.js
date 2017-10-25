@@ -157,22 +157,29 @@
                     data: this.requestData,
                     dataType: this.settings.dataType,
                     success: function (data, status, response) {
-
-                        /*
-                        data: {
-                            meta: {...}
-                            content: [HTML String]
-                        }
-                        */
-
-                        that.pages[page] = data.content;
-
-                        that.setCurrent(page);
-
+                        
+                        // retrieves the meta information from the HTTP headers
+                        var meta = {
+                            current: response.getResponseHeader('X-Page-Current'),
+                            size: response.getResponseHeader('X-Page-Size'),
+                            total: response.getResponseHeader('X-Page-Total'),
+                            first: response.getResponseHeader('X-Page-First'),
+                            prev: response.getResponseHeader('X-Page-Prev'),
+                            next: response.getResponseHeader('X-Page-Next'),
+                            last: response.getResponseHeader('X-Page-Last'),
+                        };
+                        
+                        // updates the meta information
+                        that.setMeta(meta);
+                        
                         if (data.meta) {
                             that.setMeta(data.meta);
                         }
 
+                        that.pages[page] = data.content;
+
+                        that.setCurrent(page);
+                        
                         if (!!data.content) {
 
                             that.trigger('page.load.loaded', data);
