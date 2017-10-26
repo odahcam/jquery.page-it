@@ -23,26 +23,47 @@
     }
 
     var metaSchema = {
+        /**
+         * @var {int} size : Items per page.
+         */
         size: null,
+        /**
+         * @var {int} first : Whats the first page of the collection.
+         */
         first: 1,
+        /**
+         * @var {int} prev : Whats the previous page behind current.
+         */
         prev: null,
+        /**
+         * @var {int} current : Current page number.
+         */
         current: null,
+        /**
+         * @var {int} next : Whats the next page from current.
+         */
         next: null,
+        /**
+         * @var {int} last : Whats the last page of the collection.
+         */
         last: null,
+        /**
+         * @var {int} total : The total quantity of pages.
+         */
         total: null
     };
 
     var defaults = {
         /**
-         * @var {bool} autoStart If should auto start loading the current page or not.
+         * @var {bool} autoStart : If should auto start loading the current page or not.
          */
         autoStart: false,
         /**
-         * @var {bool} cache : if should store loaded pages (and load'em from) in a local storage or not
+         * @var {bool} cache : If should store loaded pages (and load'em from) in a local storage or not
          */
         cache: true,
         /**
-         * @var {object} ajax jQuery.AJAX configuration options.
+         * @var {object} ajax : jQuery.AJAX configuration options.
          */
         ajax: {
             url: '',
@@ -50,7 +71,7 @@
             global: true,
         },
         /**
-         * @var {HTMLElement} target : if you define this, you will have auto page content updates
+         * @var {HTMLElement} target : If you define this, you will have auto page content updates
          */
         target: null,
         /**
@@ -58,7 +79,7 @@
          */
         fillMode: 'replace',
         /**
-         * @var {object} meta
+         * @var {object} meta : The meta information used for controlling the things.
          */
         meta: metaSchema
     };
