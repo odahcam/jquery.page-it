@@ -1,18 +1,18 @@
-(function ($, window, document, undefined) {
+(function($, window, document, undefined) {
 
     var pluginName = 'pageIt';
 
     var logger = {
-        log: function () {
+        log: function() {
             console.log(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        info: function () {
+        info: function() {
             console.info(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        warn: function () {
+        warn: function() {
             console.warn(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
-        error: function () {
+        error: function() {
             console.error(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
         },
     };
@@ -108,7 +108,7 @@
         /**
          * Initialize module functionality.
          **/
-        init: function () {
+        init: function() {
 
             this.trigger('ready');
 
@@ -119,7 +119,7 @@
         /**
          * @param {intger} page
          **/
-        to: function (page) {
+        to: function(page) {
 
             if (this.requesting === true) {
                 logger.warn('Uma requisição de página já está em andamento, esta requisição será ignorada.');
@@ -161,10 +161,12 @@
                     cache: this.settings.ajax.cache,
                     global: this.settings.ajax.global,
                     url: this.settings.ajax.url,
-                    data: this.requestData,
+                    data: Object.assign({
+                        pageIt: true
+                    }, this.requestData),
                     dataType: 'html', // expecting from the server
                     method: 'GET', // get the page
-                    success: function (data, status, response) {
+                    success: function(data, status, response) {
 
                         // retrieves the meta information from the HTTP headers
                         var meta = {
@@ -198,13 +200,13 @@
                         }
 
                     },
-                    error: function (response) {
+                    error: function(response) {
                         logger.error('Erro ao carregar página.');
                         console.log(response);
 
                         that.trigger('page.load.error', response);
                     },
-                    complete: function (response) {
+                    complete: function(response) {
 
                         that.requesting = false;
 
@@ -276,7 +278,7 @@
         /**
          * Calls .to() with page number meta.first as parameter.
          */
-        first: function () {
+        first: function() {
             this.trigger('page.first', this.meta.first);
             return this.to(this.meta.first);
         },
@@ -284,7 +286,7 @@
         /**
          * Calls .to() with page number meta.current - 1 as parameter.
          **/
-        prev: function () {
+        prev: function() {
             this.trigger('page.prev', this.meta.next);
             return this.to(this.meta.prev);
         },
@@ -292,7 +294,7 @@
         /**
          * Calls .to() with page number meta.current + 1 as parameter.
          **/
-        next: function () {
+        next: function() {
             this.trigger('page.next', this.meta.next);
             return this.to(this.meta.next);
         },
@@ -300,7 +302,7 @@
         /**
          * Calls .to() with page number meta.last as parameter.
          **/
-        last: function () {
+        last: function() {
             this.trigger('page.last', this.meta.last);
             return this.to(this.meta.last);
         },
@@ -313,10 +315,10 @@
          *
          * @return {object}
          **/
-        on: function (eventName, fn) {
+        on: function(eventName, fn) {
 
             if (eventName.match(' ')) {
-                eventname.split(' ').forEach(function (eventName) {
+                eventname.split(' ').forEach(function(eventName) {
                     this.on(eventName, fn);
                 });
             } else {
@@ -340,10 +342,10 @@
          *
          * @return {object}
          **/
-        off: function (eventName, fn) {
+        off: function(eventName, fn) {
 
             if (eventName.match(' ')) {
-                eventname.split(' ').forEach(function (eventName) {
+                eventname.split(' ').forEach(function(eventName) {
                     this.off(eventName, fn);
                 });
             } else {
@@ -367,14 +369,14 @@
          *
          * @example this.trigger('event'[, data, response, etc]);
          **/
-        trigger: function (eventName) {
+        trigger: function(eventName) {
 
             if (this.events[eventName] && this.events[eventName].length) {
 
                 var that = this,
                     args = arguments;
 
-                this.events[eventName].map(function (fnName) {
+                this.events[eventName].map(function(fnName) {
 
                     fnName.apply(that, Array.prototype.slice.call(args, 1)); // Array.prototype.slice will convert the arguments object
 
@@ -388,7 +390,7 @@
         /**
          * @param {object} meta
          */
-        setMeta: function (meta) {
+        setMeta: function(meta) {
             // meta is not multilevel
             Object.assign(this.meta, meta);
         },
@@ -400,7 +402,7 @@
          *
          * @param {object} requestData
          */
-        setRequestData: function (requestData) {
+        setRequestData: function(requestData) {
             // by default, request data is not multilevel
             Object.assign(this.requestData, requestData);
         },
@@ -410,7 +412,7 @@
          *
          * @param {int} current
          */
-        setCurrent: function (current) {
+        setCurrent: function(current) {
             this.meta.current = current;
             this.meta.prev = current - 1;
             this.meta.next = current + 1;
