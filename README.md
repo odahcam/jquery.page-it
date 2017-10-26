@@ -23,8 +23,8 @@ Download it via `npm`:
 | `on`             | `{string} eventName, {callable} callback` | Registers an event listener.                                                   |
 | `trigger`        | `{string} eventName, {array} params`      | Triggers an event.                                                             |
 | `setMeta`        | `{object} meta` (see meta schema)         | Sets the `meta` property, this property is used to control pagination numbers. |
-| `setCurrent`     | `{int} current`                           | Accepts a callback to update the request data.                                 |
-| `setRequestData` | `{object} requestData`                    | Sets the current page and updates dependent meta.                              |
+| `setCurrent`     | `{int} current`                           | Sets the current page and updates dependent meta.                              |
+| `setRequestData` | `{object} requestData`                    | Accepts a callback to update the request data.                                 |
 
 ## Options
 
