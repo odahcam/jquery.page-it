@@ -151,7 +151,7 @@
                 };
 
                 // user can moddify the requestData here, before the AJAX call.
-                this.trigger('page.load.before', this);
+                this.trigger('page.load.before', this.requestData);
 
                 var that = this;
 
