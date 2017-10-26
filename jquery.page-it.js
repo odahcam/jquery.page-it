@@ -34,16 +34,15 @@
 
     var defaults = {
         /**
-         * @var {bool} If should auto start loading the current page or not.
+         * @var {bool} autoStart If should auto start loading the current page or not.
          */
         autoStart: false,
         /**
          * @var {bool} cache : if should store loaded pages (and load'em from) in a local storage or not
          */
         cache: true,
-        dataType: 'json',
         /**
-         * @var {object} jQuery.AJAX configuration options.
+         * @var {object} ajax jQuery.AJAX configuration options.
          */
         ajax: {
             url: '',
@@ -59,7 +58,7 @@
          */
         fillMode: 'replace',
         /**
-         * @var {object}
+         * @var {object} meta
          */
         meta: metaSchema
     };
@@ -68,6 +67,7 @@
     window[pluginName] = function PageIt(options) {
 
         this.settings = $.extend(true, {}, defaults, options);
+
         this.events = {
             'ready': [],
             'page.load.empty': [],
@@ -86,6 +86,7 @@
             'page.next': [],
             'page.last': [],
         };
+
         this.pages = [];
 
         this.requesting = false;
