@@ -47,6 +47,7 @@ Default options are:
         url: '',
         cache: false,
         global: true,
+        method: 'get',
     },
     /**
      * @var {HTMLElement} target : If you define this, you will have auto page content updates

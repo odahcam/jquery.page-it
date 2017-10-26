@@ -69,6 +69,7 @@
             url: '',
             cache: false,
             global: true,
+            method: 'get',
         },
         /**
          * @var {HTMLElement} target : If you define this, you will have auto page content updates
@@ -182,11 +183,11 @@
                     cache: this.settings.ajax.cache,
                     global: this.settings.ajax.global,
                     url: this.settings.ajax.url,
+                    method: this.settings.ajax.method, // http method
                     data: Object.assign({
                         pageIt: true
                     }, this.requestData),
                     dataType: 'html', // expecting from the server
-                    method: 'GET', // get the page
                     success: function(data, status, response) {
 
                         // retrieves the meta information from the HTTP headers
