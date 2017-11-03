@@ -248,6 +248,7 @@
 
                     this.trigger('page.load.loaded', this.pages[page]);
                     this.trigger('page.load.cache', this.pages[page]);
+                    this.trigger('page.load.after', response);
 
                 } else {
 
@@ -340,7 +341,7 @@
         on: function(eventName, fn) {
 
             if (eventName.match(' ')) {
-                eventname.split(' ').forEach(function(eventName) {
+                eventName.split(' ').forEach(function(eventName) {
                     this.on(eventName, fn);
                 });
             } else {
@@ -367,7 +368,7 @@
         off: function(eventName, fn) {
 
             if (eventName.match(' ')) {
-                eventname.split(' ').forEach(function(eventName) {
+                eventName.split(' ').forEach(function(eventName) {
                     this.off(eventName, fn);
                 });
             } else {
