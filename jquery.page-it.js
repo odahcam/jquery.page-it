@@ -246,6 +246,8 @@
 
                 if (this.pages[page]) {
 
+                    this.setCurrent(page);
+
                     this.fillContainer(this.pages[page]);
 
                     this.trigger('page.load.loaded', this.pages[page]);
