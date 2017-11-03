@@ -234,6 +234,7 @@
 
                         // plugin .trigger method
                         that.trigger('page.load.after', response);
+                        that.trigger('page.changed', that.meta);
 
                         console.groupEnd();
 
@@ -248,6 +249,7 @@
 
                     this.trigger('page.load.loaded', this.pages[page]);
                     this.trigger('page.load.cache', this.pages[page]);
+                    this.trigger('page.changed', this.meta);
 
                 } else {
 

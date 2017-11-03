@@ -1,6 +1,6 @@
 {
     "name": "jquery.page-it",
-    "version": "0.4.8",
+    "version": "0.4.9",
     "description": "Lib for building paginations.",
     "main": "jquery.page-it.js",
     "scripts": {
@@ -11,15 +11,16 @@
         "url": "git+https://github.com/odahcam/jquery.page-it.git"
     },
     "keywords": [
-        "pagination"
+        "pagination",
+        "service"
     ],
-    "author": "jquery",
+    "author": "odahcam",
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/odahcam/jquery.page-it/issues"
     },
     "homepage": "https://github.com/odahcam/jquery.page-it#readme",
     "dependencies": {
-        "jquery": "2.x"
+        "jquery": "^3.1"
     }
 }
