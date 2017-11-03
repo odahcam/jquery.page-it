@@ -341,8 +341,9 @@
         on: function(eventName, fn) {
 
             if (eventName.match(' ')) {
+                var that = this;
                 eventName.split(' ').forEach(function(eventName) {
-                    this.on(eventName, fn);
+                    that.on(eventName, fn);
                 });
             } else {
 
@@ -368,8 +369,9 @@
         off: function(eventName, fn) {
 
             if (eventName.match(' ')) {
+                var that = this;
                 eventName.split(' ').forEach(function(eventName) {
-                    this.off(eventName, fn);
+                    that.off(eventName, fn);
                 });
             } else {
 
