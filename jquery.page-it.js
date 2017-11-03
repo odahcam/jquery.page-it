@@ -107,6 +107,7 @@
             'page.prev': [],
             'page.next': [],
             'page.last': [],
+            'page.changed': [],
         };
 
         this.pages = [];
