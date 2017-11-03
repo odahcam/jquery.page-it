@@ -248,7 +248,6 @@
 
                     this.trigger('page.load.loaded', this.pages[page]);
                     this.trigger('page.load.cache', this.pages[page]);
-                    this.trigger('page.load.after', response);
 
                 } else {
 
