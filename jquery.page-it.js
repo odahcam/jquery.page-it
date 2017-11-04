@@ -85,6 +85,8 @@
         meta: metaSchema
     };
 
+    var allowedNamedPages = ['first', 'prev', 'next', 'last'];
+
     // Constructor
     window[pluginName] = function PageIt(options) {
 
@@ -149,17 +151,17 @@
                 return false;
             }
 
+            // if index is a string like 'next' or 'prev', it will be translated by calling it's manager
+            if (typeof page === 'string' && allowedNamedPages.indexOf(page) > -1) {
+                return this[page]();
+            }
+
             var last = this.meta.last || this.meta.total;
 
             if (!page || (last && page > last)) {
                 this.trigger('page.load.skipped', {});
                 this.trigger('page.load.last', {});
                 return false;
-            }
-
-            // if index is a string like 'next' or 'prev', it will be translated by calling it's manager
-            if (typeof page === 'string' && page === 'next' || page === 'prev') {
-                return this[page]();
             }
 
             if (!this.settings.cache || !this.pages[page]) {
