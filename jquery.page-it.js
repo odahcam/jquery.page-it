@@ -118,9 +118,7 @@
 
         this.meta = this.settings.meta;
 
-        if (this.meta.current) {
-            this.setCurrent(this.meta.current);
-        }
+        this.setCurrent(this.meta.current || 1);
 
         this.requestData = {};
 
