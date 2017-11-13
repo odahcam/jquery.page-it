@@ -5,19 +5,19 @@
     var logger = {
         log: function () {
             //if (logger.canLog(arguments[0]))
-            //    console.log.apply(window, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
+            //    console.log.apply(console, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
         },
         info: function () {
             //if (logger.canLog(arguments[0]))
-            //    console.info.apply(window, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
+            //    console.info.apply(console, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
         },
         warn: function () {
             if (logger.canLog(arguments[0]))
-                console.warn.apply(window, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
+                console.warn.apply(console, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
         },
         error: function () {
             if (logger.canLog(arguments[0]))
-                console.error.apply(window, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
+                console.error.apply(console, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
         },
         canLog: function (log) {
             if (log === logger.lastLog) return false;
