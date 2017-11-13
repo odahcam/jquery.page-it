@@ -3,18 +3,28 @@
     var pluginName = 'pageIt';
 
     var logger = {
-        log: function() {
-            console.log(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
+        log: function () {
+            //if (logger.canLog(arguments[0]))
+            //    console.log.apply(window, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
         },
-        info: function() {
-            console.info(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
+        info: function () {
+            //if (logger.canLog(arguments[0]))
+            //    console.info.apply(window, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
         },
-        warn: function() {
-            console.warn(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
+        warn: function () {
+            if (logger.canLog(arguments[0]))
+                console.warn.apply(window, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
         },
-        error: function() {
-            console.error(pluginName + ': ' + arguments[0], Array.prototype.slice.call(arguments, 1));
+        error: function () {
+            if (logger.canLog(arguments[0]))
+                console.error.apply(window, [pluginName + ': ' + arguments[0]].concat(Array.prototype.slice.call(arguments, 1)));
         },
+        canLog: function (log) {
+            if (log === logger.lastLog) return false;
+            else logger.lastLog = log;
+            return true;
+        },
+        lastLog: '',
     };
 
     if (!$) {
